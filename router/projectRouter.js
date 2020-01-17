@@ -88,7 +88,7 @@ router.put('/:id', validateProject, validateProjectId, (req, res) => {
 
   projectData.update(id, req.body)
   .then ( projects => {
-    res.status(200).json({message: `Project ${projects} successfully updated.`});
+    res.status(200).json({message: `Project successfully updated.`});
   })
   .catch (err => {
     res.status(500).json({error: "Project can not be deleted."})
@@ -144,6 +144,9 @@ function validateProjectActions(req, res, next) {
   }
   else if (!notes) {
     res.status(400).json({message: "missing required notes field"})
+  }
+  else if (description.length > 250) {
+    res.status(400).json({message: "Description is longer than 250 characters."})
   }
   else {
     next();
