@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
   })
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', validateProjectId, (req, res) => {
   const id = req.params.id;
 
   projectData.get(id)
@@ -28,8 +28,7 @@ router.get('/:id', (req, res) => {
   })
 });
 
-router.get('/:id/actions', (req, res) => {
-  // do your magic!
+router.get('/:id/actions', validateProjectActions, validateProjectId, (req, res) => {
   const id = req.params.id;
 
   projectData.getProjectActions(id)
@@ -47,7 +46,7 @@ router.get('/:id/actions', (req, res) => {
 
 });
 
-router.post('/', (req, res) => {
+router.post('/', validateProject, (req, res) => {
     const projectInfo = req.body;
   
     projectData.insert(projectInfo)
@@ -59,7 +58,20 @@ router.post('/', (req, res) => {
     })
   });  
 
-router.delete('/:id', (req, res) => {
+router.post('/:id/actions', validateProjectActions, (req, res) => {
+    const actionInfo = req.body;
+
+    actionData.insert(actionInfo)
+    .then ( actions => {
+      res.status(200).json(actions);
+    })
+    .catch (err => {
+      res.status(500).json({error: "action for this project can not be added."})
+    })
+});  
+
+
+router.delete('/:id', validateProjectId, (req, res) => {
   const id = req.params.id;
 
   projectData.remove(id)
@@ -71,12 +83,12 @@ router.delete('/:id', (req, res) => {
   })
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validateProject, validateProjectId, (req, res) => {
   const id = req.params.id;
 
   projectData.update(id, req.body)
   .then ( projects => {
-    res.status(200).json({message: `user ${projects} successfully updated.`});
+    res.status(200).json({message: `Project ${projects} successfully updated.`});
   })
   .catch (err => {
     res.status(500).json({error: "Project can not be deleted."})
@@ -86,7 +98,9 @@ router.put('/:id', (req, res) => {
 
 function validateProjectId(req, res, next) {
   const id = req.params.id;
-  ProjectData.get(id)
+  const projectInfo = req.body;
+
+  projectData.get(id)
   .then (projects => {
     if (projects) {
       next();
@@ -102,7 +116,7 @@ function validateProjectId(req, res, next) {
 
 function validateProject(req, res, next) {
   const projectInfo = req.body;
-  const { name } = projectInfo;
+  const { name, description } = projectInfo;
 
   if (!projectInfo) {
     res.status(400).json({message: "missing project data"})
@@ -110,21 +124,26 @@ function validateProject(req, res, next) {
   else if (!name) {
     res.status(400).json({message: "missing required name field"})
   }
+  else if (!description) {
+    res.status(400).json({message: "missing required description field"})
+  }
   else {
     next();
   }
 }
 
 function validateProjectActions(req, res, next) {
-  // do your magic!
   const actionInfo = req.body;
-  const { project_id, description } = actionInfo;
+  const { project_id, description, notes } = actionInfo;
 
   if (!project_id) {
     res.status(400).json({message: "missing project id data"})
   }
   else if (!description) {
     res.status(400).json({message: "missing required description field"})
+  }
+  else if (!notes) {
+    res.status(400).json({message: "missing required notes field"})
   }
   else {
     next();

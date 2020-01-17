@@ -20,6 +20,6 @@ function logger(req, res, next) {
 
 server.use(logger);
 server.use('/api/project', projectRouter);
-// server.use('/api/action', actionRouter);
+server.use('/api/action', actionRouter);
 
 module.exports = server;
