@@ -12,3 +12,11 @@ I need this code, but don't know where, perhaps should make some middleware, don
 
 Go code!
 */
+
+const server = require('./server.js')
+
+const port = process.env.PORT || 4444;
+server.listen(port, () => {
+    console.log(`Sprint Challenge is running fine from server at port: ${port}`)
+})
+
