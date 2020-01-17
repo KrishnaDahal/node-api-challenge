@@ -40,13 +40,25 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 
 - [ ] Mention two parts of Express that you learned about this week.
 
+--> Server-side routing: Express helps us to route the incoming requests to appropriate request handler based on URL and HTTP method used.
+
+    Middleware: Express provides a way to add extra functionalities to our application like authentication, called middleware.
+
 - [ ] Describe Middleware?
+
+---> Middleware is a software or lines of code that provide extra functionalities to the application. Some of them are in-built within a system; we can add third-party middleware or create our own custom middleware as per our need to extend some features on the application.
 
 - [ ] Describe a Resource?
 
+---> The target of HTTP request is a resource that can a data, properties, etc.
+
 - [ ] What can the API return to help clients know if a request was successful?
 
+---> API can return the response code (with message) to help clients know if a request was successful.
+
 - [ ] How can we partition our application into sub-applications?
+
+---> We can partition our application into sub-applications by building intances to handle specific part of application like api (intance to handle API, HTTP requests), client (for front-end), router (for different routes), middleware (for custom middlewares). Also we can partition based on environment like development, testing/staging, and production.
 
 ## Minimum Viable Product
 
